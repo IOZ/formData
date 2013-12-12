@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Formdata - easy form validator</title>
+	<script type="text/javascript" src="lib/jquery-2.0.3.min.js"></script>
+	
+
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+
+<div class="data-form">
+	
+	<div class="header">
+		<img class="logo" src="img/formdata.png" alt="FormData- tiny form validator ">
+		<p class="description"> tiny form validator </p>
+	</div>
+
+	<form action="#" method="get">
+		<div class="form-row">
+			<label> Name </label>
+			<input data-valid data-message="Поле Name не може быть пустым" type="text" name="name">
+		</div>
+		<div class="form-row">
+			<label> Email </label>
+			<input data-valid="email" data-message="Поле Email не може быть пустым|Email адрес введен некорректно" type="text" name="email">
+		</div>
+		<div class="form-row">
+			<label> Index </label>
+			<input data-valid="number" data-message="Поле Index не може быть пустым|Поле index должно содержать только цифры" type="text" name="index">
+		</div>
+		<div class="form-row">
+			<label> Message </label>
+			<textarea data-valid data-message="Поле Message не може быть пустым" name="message" id="" cols="30" rows="10"></textarea>
+		</div>
+		<div class="form-row">
+			<label> <input data-valid type="checkbox" data-message="Вы должны отметить поле" name="agree"> С условиями согласен </label>
+		</div>
+		<button>Send</button>
+	
+	</form>
+</div>
+	
+<script type="text/javascript" src="src/formData.js"></script>
+</body>
+</html>
