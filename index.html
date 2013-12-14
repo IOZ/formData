@@ -4,8 +4,6 @@
 	<meta charset="UTF-8">
 	<title>Formdata - easy form validator</title>
 	<script type="text/javascript" src="lib/jquery-2.0.3.min.js"></script>
-	
-
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
@@ -32,7 +30,15 @@
 		</div>
 		<div class="form-row">
 			<label> Message </label>
-			<textarea data-valid data-message="Поле Message не може быть пустым" name="message" id="" cols="30" rows="10"></textarea>
+			<textarea data-valid="range|2|5" data-message="Поле Message не може быть пустым|Необходимо ввести от {0} до {1} символов" name="message" id="" cols="30" rows="10"></textarea>
+		</div>
+		<div class="form-row">
+			<label> Min char </label>
+			<textarea data-valid="min|2" data-message="Поле Message не може быть пустым|Необходимо ввести от {0} символов" name="min" id="" cols="30" rows="10"></textarea>
+		</div>
+		<div class="form-row">
+			<label> Max char </label>
+			<textarea data-valid="max|3" data-message="Поле Message не може быть пустым|Необходимо ввести до {0} символов" name="min" id="" cols="30" rows="10"></textarea>
 		</div>
 		<div class="form-row">
 			<label> <input data-valid type="checkbox" data-message="Вы должны отметить поле" name="agree"> С условиями согласен </label>

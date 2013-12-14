@@ -53,11 +53,15 @@
 					arguments,
 					error;
 
+
+
 				// split data params
 				valid_text = valid_text.split('|');
 				arguments  = valid.split('|');	
 
 				// validate fields
+
+				
 
 				if(!value.length){
 					error = settings.tpl.error.replace('{message}', valid_text[0]);
@@ -76,7 +80,6 @@
 							break;
 
 						case 'float':
-
 							if( !re_float.test(value) ){
 								error = settings.tpl.error.replace('{message}', valid_text[1]);
 								SVmodel.setErr(obj, error);
@@ -94,9 +97,52 @@
 								SVmodel.clearErr(obj);
 							}
 							break;
+						case 'range':
+							if ( value.length < parseInt(arguments[1]) || value.length > parseInt(arguments[2]) ) {
+								error = settings.tpl.error
+										.replace('{message}', valid_text[1])
+										.replace('{0}', arguments[1])
+										.replace('{1}', arguments[2]);
+								SVmodel.setErr(obj, error);
+							} else {
+								SVmodel.clearErr(obj);
+							}
+							break;
+						case 'min':
+							if ( value.length < parseInt(arguments[1]) ) {
+								error = settings.tpl.error
+										.replace('{message}', valid_text[1])
+										.replace('{0}', arguments[1]);
+								SVmodel.setErr(obj, error);
+							} else {
+								SVmodel.clearErr(obj);
+							}
+							break;
+						case 'max':
+							if ( value.length > parseInt(arguments[1]) ) {
+								error = settings.tpl.error
+										.replace('{message}', valid_text[1])
+										.replace('{0}', arguments[1]);
+								SVmodel.setErr(obj, error);
+							} else {
+								SVmodel.clearErr(obj);
+							}
+							break;
 
 						default:
+
 							SVmodel.clearErr(obj);
+							
+							if(obj.is(':checkbox')){
+								if(!obj.is(':checked')){
+									error = settings.tpl.error.replace('{message}', valid_text[0]);
+									SVmodel.setErr(obj, error);
+								} else {
+									SVmodel.clearErr(obj);
+								}
+							} 
+
+							
 							break;
 					}
 				}
@@ -105,10 +151,10 @@
 
 		return this.each(function(){
 			
-			var that   = $(this),
-				fields = that.find('[data-valid]');
+			var form   = $(this),
+				fields = form.find('[data-valid]');
 
-				that.data('init', true);
+				form.data('init', true);
 
 				// check field on blur (optional)
 				if( settings.blur ){
@@ -119,7 +165,7 @@
 				}
 
 				// check field on submit
-				that.on('submit', function(e){
+				form.on('submit', function(e){
 
 					// clear error log
 					formArrLog = [];	
@@ -145,27 +191,24 @@
 					}  else {
 						// TODO: success callback
 						if( typeof settings.callback == "function" ){
-							var param  = that.serialize();
+							var param  = form.serialize();
 							settings.callback.call(this, param);
 							return false;
 						}
 					}
 				});
 		});
-
 	};
-
 })(jQuery);
 
 
 
-	$('form').fromData({
-		blur: true,
-		error: function(ErrLog){
-			console.log(ErrLog);
-		},
-		callback: function(param){
-			console.log(param);
-		}
-
-	});
+$('form').fromData({
+	blur: true,
+	error: function(ErrLog){
+		console.log(ErrLog);
+	},
+	callback: function(param){
+		console.log(param);
+	}
+});
