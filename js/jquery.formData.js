@@ -9,12 +9,8 @@
 			tpl : {
 				error : '<span class="form-error">{message}</span>'
 			},
-			error : function(log){
-				// do some
-			},
-			callback : function(param){
-				// do some
-			}
+			error : function(log){},
+			success : function(param){}
 		};
 		
 		var settings   = $.extend( {}, defaults, param ),
@@ -53,16 +49,11 @@
 					arguments,
 					error;
 
-
-
 				// split data params
 				valid_text = valid_text.split('|');
 				arguments  = valid.split('|');	
 
 				// validate fields
-
-				
-
 				if(!value.length){
 					error = settings.tpl.error.replace('{message}', valid_text[0]);
 					SVmodel.setErr(obj, error);
@@ -190,9 +181,9 @@
 						return false;
 					}  else {
 						// TODO: success callback
-						if( typeof settings.callback == "function" ){
+						if( typeof settings.success == "function" ){
 							var param  = form.serialize();
-							settings.callback.call(this, param);
+							settings.success.call(this, param);
 							return false;
 						}
 					}
@@ -203,12 +194,3 @@
 
 
 
-$('form').fromData({
-	blur: true,
-	error: function(ErrLog){
-		console.log(ErrLog);
-	},
-	callback: function(param){
-		console.log(param);
-	}
-});

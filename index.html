@@ -48,6 +48,19 @@
 	</form>
 </div>
 	
-<script type="text/javascript" src="src/formData.js"></script>
+<script type="text/javascript" src="js/jquery.formData.js"></script>
+<script type="text/javascript">
+	(function($){
+		$('form').fromData({
+			blur: true,
+			error: function(ErrLog){
+				console.log(ErrLog);
+			},
+			success: function(param){
+				console.log(param);
+			}
+		});
+	})(jQuery);
+</script>
 </body>
 </html>
