@@ -1,6 +1,9 @@
 (function($){
 
 	$.fn.fromData = function(param){
+		
+		'use strict';
+
 
 		var defaults = {
 			blur              : true,
@@ -46,12 +49,12 @@
 				var valid        = obj.data('valid'),
 					valid_text   = obj.data('message'),
 					value        = $.trim(obj.val()),
-					arguments,
+					args,
 					error;
 
 				// split data params
 				valid_text = valid_text.split('|');
-				arguments  = valid.split('|');	
+				args  = valid.split('|');	
 
 				// validate fields
 				if(!value.length){
@@ -60,7 +63,7 @@
 				} else if (value.length>0) {
 
 					// validation type
-					switch(arguments[0]){
+					switch(args[0]){
 						case 'email':
 							if( !re_email.test(value) ){
 								error = settings.tpl.error.replace('{message}', valid_text[1]);
@@ -89,31 +92,31 @@
 							}
 							break;
 						case 'range':
-							if ( value.length < parseInt(arguments[1]) || value.length > parseInt(arguments[2]) ) {
+							if ( value.length < parseInt(args[1]) || value.length > parseInt(args[2]) ) {
 								error = settings.tpl.error
 										.replace('{message}', valid_text[1])
-										.replace('{0}', arguments[1])
-										.replace('{1}', arguments[2]);
+										.replace('{0}', args[1])
+										.replace('{1}', args[2]);
 								SVmodel.setErr(obj, error);
 							} else {
 								SVmodel.clearErr(obj);
 							}
 							break;
 						case 'min':
-							if ( value.length < parseInt(arguments[1]) ) {
+							if ( value.length < parseInt(args[1]) ) {
 								error = settings.tpl.error
 										.replace('{message}', valid_text[1])
-										.replace('{0}', arguments[1]);
+										.replace('{0}', args[1]);
 								SVmodel.setErr(obj, error);
 							} else {
 								SVmodel.clearErr(obj);
 							}
 							break;
 						case 'max':
-							if ( value.length > parseInt(arguments[1]) ) {
+							if ( value.length > parseInt(args[1]) ) {
 								error = settings.tpl.error
 										.replace('{message}', valid_text[1])
-										.replace('{0}', arguments[1]);
+										.replace('{0}', args[1]);
 								SVmodel.setErr(obj, error);
 							} else {
 								SVmodel.clearErr(obj);
