@@ -27,7 +27,7 @@ $('form').fromData({
 	// Callback's
 	error: function(log){}, // on error callback
 	success: function(param){} // on success callback
-	
+
 });
 ```
 
@@ -65,6 +65,6 @@ data-message="This field is required.|Please enter a value between {0} and {1} c
 
 ```javascript
 // external validate form 
-$('#form').fromDataValid();
-```
+$('#form').formDataValid();
+``` 
 
