@@ -1,7 +1,7 @@
 (function($){
 
 	$.fn.fromData = function(param){
-		
+
 		'use strict';
 
 		/**
@@ -17,7 +17,7 @@
 				}
 			}
 		});
-
+ 
 		var defaults = {
 			blur              : true,
 			validSuccessClass : 'success',
