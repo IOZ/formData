@@ -6,13 +6,13 @@ Simple in use form validation, based on data- attributes
 basic usage:
 	
 ```javascript
-$('form').fromData();
+$('form').formData();
 ```
 
 usage with params:	
 
 ```javascript
-$('form').fromData({
+$('form').formData({
 	
 	// Options
 	blur: true, // check field on blur
