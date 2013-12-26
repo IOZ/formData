@@ -4,6 +4,19 @@
 		
 		'use strict';
 
+		/**
+		 * Helpers methods
+		 */
+		$.extend($.fn, {
+			formDataValid : function(){
+				var form = $(this);
+				if(form.data('init')){
+					form.submit();
+				} else {
+					return 'Error: form dont init';
+				}
+			}
+		});
 
 		var defaults = {
 			blur              : true,
@@ -26,7 +39,7 @@
 
 		var SVmodel = {
 			clearErr : function(obj){
-				obj
+				obj 
 					.addClass(settings.validSuccessClass)
 					.removeClass(settings.validErrClass)
 					.next()
