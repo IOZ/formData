@@ -15,52 +15,31 @@
 		<p class="description"> tiny form validator </p>
 	</div>
 
-	<form action="#" method="get">
+	<form action="#complate" method="get" class="formdata">
 		<div class="form-row">
 			<label> Name </label>
-			<input data-valid data-message="Поле Name не може быть пустым" type="text" name="name">
+			<input data-valid type="text" name="name">
 		</div>
 		<div class="form-row">
 			<label> Email </label>
-			<input data-valid="email" data-message="Поле Email не може быть пустым|Email адрес введен некорректно" type="text" name="email">
+			<input data-valid="email" type="text" name="email">
+		</div>
+		<!--<div class="form-row">
+			<label> Minimum 6 chars </label>
+			<input data-valid="min|6" type="text" name="min">
 		</div>
 		<div class="form-row">
-			<label> Index </label>
-			<input data-valid="number" data-message="Поле Index не може быть пустым|Поле index должно содержать только цифры" type="text" name="index">
+			<label> Maximum 4 chars </label>
+			<input data-valid="max|4" type="text" name="max">
 		</div>
 		<div class="form-row">
-			<label> Message </label>
-			<textarea data-valid="range|2|5" data-message="Поле Message не може быть пустым|Необходимо ввести от {0} до {1} символов" name="message" id="" cols="30" rows="10"></textarea>
-		</div>
-		<div class="form-row">
-			<label> Min char </label>
-			<textarea data-valid="min|2" data-message="Поле Message не може быть пустым|Необходимо ввести от {0} символов" name="min" id="" cols="30" rows="10"></textarea>
-		</div>
-		<div class="form-row">
-			<label> Max char </label>
-			<textarea data-valid="max|3" data-message="Поле Message не може быть пустым|Необходимо ввести до {0} символов" name="min" id="" cols="30" rows="10"></textarea>
-		</div>
-		<div class="form-row">
-			<label> <input data-valid type="checkbox" data-message="Вы должны отметить поле" name="agree"> С условиями согласен </label>
-		</div>
+			<label> Range from 2 to 4 chars </label>
+			<input data-valid="range|2-6" type="text" name="range">
+		</div>-->
 		<button>Send</button>
-	
 	</form>
 </div>
 	
-<script type="text/javascript" src="js/jquery.formData.js"></script>
-<script type="text/javascript">
-	(function($){
-		$('form').fromData({
-			blur: true,
-			error: function(ErrLog){
-				console.log(ErrLog);
-			},
-			success: function(param){
-				console.log(param);
-			}
-		});
-	})(jQuery);
-</script>
+<script type="text/javascript" src="src/core.js"></script>
 </body>
 </html>
