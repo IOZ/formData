@@ -13,6 +13,8 @@
         validFormClass : 'formdata'
     };
     defaultOptions = {
+        keyup: false,
+        blur: true,
         validDataAttr : 'valid',
         classSuccess : 'success',
         classError : 'error',
@@ -26,7 +28,8 @@
 
     RE = {
         email : /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        float : /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/
+        float : /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/,
+        number : /^\d+$/
     };
 
     Locale = {
@@ -79,12 +82,12 @@
         var self = this;
         this.$fields.on({
             'keyup' : function(e) {
-                if (e.keyCode !== 9) {
+                if (e.keyCode !== 9 && self.options.keyup) {
                     self.validateField(this);
                 }
             },
             'blur' : function() {
-                self.validateField(this);
+                return self.options.blur ? self.validateField(this) : false;
             }
         });
     };
@@ -100,8 +103,8 @@
                 }
             } else {
                 if (typeof self.options.onSuccess == "function") {
-                    self.options.onSuccess();
-                    return false;
+                    e.preventDefault();
+                    self.options.onSuccess(self.$form);
                 }
             }
         });
@@ -214,6 +217,8 @@
         });
     };
 
-    $('.' + coreOptions.validFormClass).FormData();
+    $(function() {
+        $('.' + coreOptions.validFormClass).FormData();
+    });
 
 })(jQuery, window, document);

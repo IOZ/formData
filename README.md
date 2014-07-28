@@ -16,6 +16,7 @@ $('form').formData({
 	
 	// Options
 	blur: true, // check field on blur
+	keyup: true // check field when on keyup event
 	
 	// Views
 	validSuccessClass : 'success',
