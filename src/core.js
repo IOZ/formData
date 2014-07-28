@@ -92,10 +92,18 @@
     FormData.prototype.addFormEvents = function() {
         var self = this;
         this.$form.on('submit', function(e) {
+            self.submitForm();
             if (!self.isFormValid) {
                 e.preventDefault();
+                if (typeof self.options.onError == "function") {
+                    self.options.onError(self.formLog);
+                }
+            } else {
+                if (typeof self.options.onSuccess == "function") {
+                    self.options.onSuccess();
+                    return false;
+                }
             }
-            self.submitForm();
         });
     };
 
@@ -104,20 +112,7 @@
         this.$fields.each(function() {
             self.validateField(this);
         });
-
         this.isFormValid = !this.parseFormLog();
-
-        if (typeof this.options.onError == "function") {
-            this.options.onError(this.formLog);
-        }
-
-        if (this.isFormValid && !this.options.preventSubmit) {
-            this.$form.submit();
-        } else {
-            if (typeof self.options.onSuccess == "function") {
-                self.options.onSuccess();
-            }
-        }
     };
 
     FormData.prototype.parseFormLog = function() {
