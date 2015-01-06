@@ -3,7 +3,7 @@
 Simple in use form validation, based on data- attributes
 
 ###Getting started
-1. include to your project next files:
+1). include to your project next files:
 ```html
 <!-- load jQuery from CDN -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -11,7 +11,7 @@ Simple in use form validation, based on data- attributes
 <!-- Form data plugin -->
 <script type="text/javascript" src="../dest/formData.min.js"></script>
 ```
-2. Add to your form classname **formdata** and set to input validation rules:
+2). Add to your form classname **formdata** and set to input validation rules:
 ```html
 <form action="/" method="post" class="formdata">
     <div class="form-row">
@@ -29,7 +29,7 @@ Simple in use form validation, based on data- attributes
     <button>Send</button>
 </form>
 ```
-3. Reload page. Plugin was automatically initialized for all forms which contains class **formdata**.
+3). Reload page. Plugin was automatically initialized for all forms which contains class **formdata**.
 
 ### Validation rules
 	
