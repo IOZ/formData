@@ -3,33 +3,13 @@
 Simple in use form validation, based on data- attributes
 
 ###Getting started
-basic usage:
-	
-```javascript
-$('form').formData();
-```
+include to your project next files
+```html
+<!-- load jQuery from CDN -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
-usage with params:	
-
-```javascript
-$('form').formData({
-	
-	// Options
-	blur: true, // check field on blur
-	keyup: true // check field when on keyup event
-	
-	// Views
-	validSuccessClass : 'success',
-	validErrClass     : 'error',
-	tpl : {
-		error : '<span class="form-error">{message}</span>'
-	},
-	
-	// Callback's
-	error: function(log){}, // on error callback
-	success: function(param){} // on success callback
-
-});
+<!-- Form data plugin -->
+<script type="text/javascript" src="../dest/formData.min.js"></script>
 ```
 
 ### Validation rules
@@ -37,35 +17,35 @@ $('form').formData({
 ```html
 <input data-valid="" data-message="" type="text" name="email">
 
+// simple checking to empty field
+data-valid
+
 // email
 data-valid="email"
-data-message="This field is required.|Please enter a valid email address."
-
-// number
-data-valid="number"
-data-message="This field is required.|Please enter a valid number."
-
-// float number
-data-valid="float"
-data-message="This field is required.|Please enter a valid number."
 
 // min chars
 data-valid="min|2"
-data-message="This field is required.|Please enter a value greater than or equal to {0}."
 
 // max chars
 data-valid="max|10"
-data-message="This field is required.|Please enter a value less than or equal to {0}."
 
 // range chars
 data-valid="range|2|10"
-data-message="This field is required.|Please enter a value between {0} and {1} characters long."
 ```
 
-### Plugin methods
-
+### Options
 ```javascript
-// external validate form 
-$('#form').formDataValid();
-``` 
-
+$('form').FormData({
+	keyup: false,             // validate field on keyuo event  
+        blur: true,               // validate field when user focus out from field
+        validDataAttr : 'valid',  // validate data- attribute, by defaul "data-valid"
+        classSuccess : 'success', // add class when field is valid
+        classError : 'error',     // add class when field invalid
+        tpl : {                   // error template view
+            error : '<span class="form-error">{message}</span>'
+        },
+        preventSubmit : false,    // if form is valid, prevent submit it
+        onError : null,           // execute every time when form submiting with invalid data
+        onSuccess : null          // if form fill correctly, execute this function
+});
+```
