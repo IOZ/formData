@@ -48,10 +48,6 @@
         this.addFieldEvents();
     }
 
-    FormData.setup = function(options) {
-        defaultOptions = $.extend(true, {}, defaultOptions, options);
-    };
-
     FormData.prototype.getFieldsRules = function() {
         var self, i, $field, rule, ruleName, ruleOpt = null;
         self = this;
@@ -221,6 +217,12 @@
             }
         }
     };
+
+    FormData.setup = function(options) {
+        defaultOptions = $.extend(true, {}, defaultOptions, options);
+    };
+
+    window.FormData = FormData;
 
     $.fn[pluginName] = function(options) {
         return this.each(function() {

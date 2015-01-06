@@ -1,6 +1,6 @@
 /**
  * formData - Form validation based on data attributes
- * @date - Tue Jan 06 2015 12:46:59 GMT+0100 (Central Europe Standard Time)
+ * @date - Tue Jan 06 2015 13:26:52 GMT+0100 (Central Europe Standard Time)
  * @version - 1.0.1
  */
 ;(function($, win, doc) {
@@ -52,10 +52,6 @@
         this.addFormEvents();
         this.addFieldEvents();
     }
-
-    FormData.setup = function(options) {
-        defaultOptions = $.extend(true, {}, defaultOptions, options);
-    };
 
     FormData.prototype.getFieldsRules = function() {
         var self, i, $field, rule, ruleName, ruleOpt = null;
@@ -226,6 +222,12 @@
             }
         }
     };
+
+    FormData.setup = function(options) {
+        defaultOptions = $.extend(true, {}, defaultOptions, options);
+    };
+
+    win.FormData = FormData;
 
     $.fn[pluginName] = function(options) {
         return this.each(function() {
