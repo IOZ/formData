@@ -69,7 +69,7 @@ data-valid="range|2|10"
 }
 ```
 
-Also you can override base options:
+Also you can override base options, insert following code outside jQuery DOM ready function:
 ```javascript
 FormData.setup({
     preventSubmit : true,
