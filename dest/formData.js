@@ -1,3 +1,8 @@
+/**
+ * formData - Form validation based on data attributes
+ * @date - Tue Jan 06 2015 12:46:59 GMT+0100 (Central Europe Standard Time)
+ * @version - 1.0.1
+ */
 ;(function($, win, doc) {
     'use strict';
 
