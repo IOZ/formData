@@ -16,6 +16,7 @@ var config = {
     scripts: {
         src: [
             'src/core.js',
+            'src/validation-rules.js'
         ],
         dest: 'dest',
         file: 'formData.js',

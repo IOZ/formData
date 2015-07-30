@@ -1,12 +1,14 @@
 /**
  * formData - Form validation based on data attributes
- * @date - Tue Jan 06 2015 13:26:52 GMT+0100 (Central Europe Standard Time)
+ * @date - Thu Jul 30 2015 14:39:45 GMT+0200 (Central Europe Daylight Time)
  * @version - 1.0.1
  */
 ;(function($, win, doc) {
     'use strict';
 
-    var defaultOptions, coreOptions, pluginName, version, RE, Locale;
+    var defaultOptions, coreOptions, pluginName, version, RE, Locale, rules;
+
+    rules = {};
 
     pluginName = 'FormData';
     version = '1.0.1';
@@ -44,7 +46,7 @@
     function FormData(element, options) {
         this.$form = $(element);
         this.options = $.extend(true, {}, defaultOptions, options);
-        this.$fields = this.$form.find('[data-' + this.options.validDataAttr + ']');
+        this.$fields = this.$form.find('[data-' + this.options.validDataAttr + '], [required]');
         this.isFormValid = false;
         this.formLog = {};
         this.version = version;
@@ -62,6 +64,7 @@
             $field = $(this);
             rule = $field.data(self.options.validDataAttr) || null;
             $field.data('field-id', i);
+            $field.attr('aria-invalid', 'false');
             if (/\|/.test(rule)) {
                 rule = rule.split('|');
                 ruleName = rule[0];
@@ -76,6 +79,7 @@
                 name : ruleName,
                 opt : ruleOpt
             });
+            console.log(ruleName);
             i++;
         });
     };
@@ -135,33 +139,15 @@
         this.$field = $(field);
         this.fieldId = this.$field.data('field-id');
         this.fieldName = this.$field.attr('name');
-        this.fieldValue = $.trim(this.$field.val());
-        this.fieldRuleOpt = this.fieldsRules[this.fieldId].opt;
+        this.value = $.trim(this.$field.val());
+        this.opt = this.fieldsRules[this.fieldId].opt;
 
         this.fieldRuleName = this.fieldsRules[this.fieldId].name
             ? this.fieldsRules[this.fieldId].name
-            : 'empty';
+            : 'required';
 
-        switch (this.fieldRuleName) {
-            case 'email':
-                this.isFieldValid(RE.email.test(this.fieldValue));
-                break;
-            case 'min':
-                this.isFieldValid(this.fieldValue.length >= Math.floor(this.fieldRuleOpt));
-                break;
-            case 'max':
-                this.isFieldValid(this.fieldValue.length <= Math.floor(this.fieldRuleOpt) && this.fieldValue.length);
-                break;
-            case 'range':
-                this.isFieldValid(
-                    this.fieldValue.length >= Math.floor(this.fieldRuleOpt[0])
-                    && this.fieldValue.length <= Math.floor(this.fieldRuleOpt[1])
-                );
-                break;
-            default:
-                this.isFieldValid(this.fieldValue.length);
-                break;
-        }
+        this.validationRule = FormData.getRule(this.fieldRuleName);
+        this.isFieldValid(this.validationRule.fn.call(this));         
     };
 
     FormData.prototype.isFieldValid = function(isValid) {
@@ -172,6 +158,7 @@
         if (this.formLog[this.fieldName] || this.$field.prop('disabled')) { return; }
         this.$field.removeClass(this.options.classSuccess);
         this.$field.addClass(this.options.classError);
+        this.$field.attr('aria-invalid', 'true');
 
         if (this.$field.data('message')) {
             this.showFieldErrorMessage(this.$field.data('message'))
@@ -183,19 +170,20 @@
     FormData.prototype.hideFieldError = function() {
         this.$field.removeClass(this.options.classError);
         this.$field.addClass(this.options.classSuccess);
+        this.$field.attr('aria-invalid', 'false');
         this.hideFieldErrorMessage();
     };
 
     FormData.prototype.showFieldErrorMessage = function(message) {
         var tpl, i, optLength;
-        if (typeof this.fieldRuleOpt === "string") {
-            message = message.replace(/{\w+}/i, this.fieldRuleOpt);
+        if (typeof this.opt === "string") {
+            message = message.replace(/{\w+}/i, this.opt);
         }
-        if (this.fieldRuleOpt && typeof this.fieldRuleOpt === "object") {
+        if (this.opt && typeof this.opt === "object") {
             i = 0;
-            optLength = this.fieldRuleOpt.length;
+            optLength = this.opt.length;
             for ( i; i < optLength; i++ ) {
-                message = message.replace(/{\w+}/i, this.fieldRuleOpt[i]);
+                message = message.replace(/{\w+}/i, this.opt[i]);
             }
         }
         this.formLog[this.fieldName] = message;
@@ -227,7 +215,30 @@
         defaultOptions = $.extend(true, {}, defaultOptions, options);
     };
 
-    win.FormData = FormData;
+    FormData.addRule = function(name, fn, message) {
+        if (rules[name]) {
+            throw new Error('Validation rule:' + name + ' already added.');
+        }
+
+        if (typeof fn != 'function') {
+            throw new Error('Rule function not defined.');
+        }
+
+        rules[name] = {
+            fn: fn,
+            message: message || 'Error'
+        };
+    };
+
+    FormData.getRule = function(name) {
+        if (!rules[name]) {
+            throw new Error('Validation rule:' + name + ' doesn\'t exist.');
+        }
+
+        return rules[name];
+    };
+
+    window.FormData = FormData;
 
     $.fn[pluginName] = function(options) {
         return this.each(function() {
@@ -245,3 +256,38 @@
     });
 
 })(jQuery, window, document);
+
+(function($) {
+    FormData.addRule('required', function() {
+        return this.value.length;
+    }, 'This field is required.');
+
+    FormData.addRule('email', function() {
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(this.value);
+    }, 'Please enter a valid email address. For example user@site.com');
+
+    FormData.addRule('number', function() {
+        var re = /^\d+$/;
+        return re.test(this.value);
+    }, 'Please enter numbers only.');
+
+    FormData.addRule('float', function() {
+        var re = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/;
+        return re.test(this.value);
+    }, 'Please enter numbers with float point.');
+
+    FormData.addRule('min', function() {
+        return this.value.length >= Math.floor(this.opt);
+    }, 'You should fill minimum {min} characters.');
+
+    FormData.addRule('max', function() {
+        return this.value.length <= Math.floor(this.opt) && this.value.length;
+    }, 'You should fill maximum {max} characters');
+
+    FormData.addRule('range', function() {
+        return this.value.length >= Math.floor(this.opt[0])
+                && this.value.length <= Math.floor(this.opt[1]);
+    }, 'You should fill from {min} to {max} characters.');
+
+})(jQuery);

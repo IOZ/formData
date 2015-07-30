@@ -15,23 +15,23 @@
         <form action="#complate" method="get" class="formdata">
             <div class="form-row">
                 <label> Name </label>
-                <input data-valid type="text" name="name">
+                <input type="text" name="name" required>
             </div>
             <div class="form-row">
                 <label> Email </label>
-                <input data-valid="email" type="text" name="email">
+                <input data-valid="email" type="text" name="email" required>
             </div>
             <div class="form-row">
                 <label> Minimum 6 chars </label>
-                <input data-valid="min|6" type="text" name="min">
+                <input data-valid="min|6" type="text" name="min" required>
             </div>
             <div class="form-row">
                 <label> Maximum 4 chars </label>
-                <input data-valid="max|4" type="text" name="max">
+                <input data-valid="max|4" type="text" name="max" required>
             </div>
             <div class="form-row">
-                <label> Range from 2 to 4 chars </label>
-                <input data-valid="range|2-6" type="text" name="range">
+                <label> Range from 2 to 6 chars </label>
+                <input data-valid="range|2-6" type="text" name="range" required>
             </div>
             <button>Send</button>
         </form>
