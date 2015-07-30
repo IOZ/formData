@@ -1,12 +1,12 @@
 /**
  * formData - Form validation based on data attributes
- * @date - Thu Jul 30 2015 14:39:45 GMT+0200 (Central Europe Daylight Time)
+ * @date - Thu Jul 30 2015 14:48:55 GMT+0200 (Central Europe Daylight Time)
  * @version - 1.0.1
  */
 ;(function($, win, doc) {
     'use strict';
 
-    var defaultOptions, coreOptions, pluginName, version, RE, Locale, rules;
+    var defaultOptions, coreOptions, pluginName, version, rules;
 
     rules = {};
 
@@ -27,20 +27,6 @@
         preventSubmit : false,
         onError : null,
         onSuccess : null
-    };
-
-    RE = {
-        email : /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        float : /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/,
-        number : /^\d+$/
-    };
-
-    Locale = {
-        empty : 'This is a required field.',
-        email : 'Please enter a valid email address. For example name@site.com',
-        min : 'You should fill minimum {min} characters',
-        max : 'You should fill maximum {max} characters',
-        range : 'You should fill from {min} to {max} characters'
     };
 
     function FormData(element, options) {
@@ -79,7 +65,6 @@
                 name : ruleName,
                 opt : ruleOpt
             });
-            console.log(ruleName);
             i++;
         });
     };
@@ -163,7 +148,7 @@
         if (this.$field.data('message')) {
             this.showFieldErrorMessage(this.$field.data('message'))
         } else {
-            this.showFieldErrorMessage(Locale[this.fieldRuleName]);
+            this.showFieldErrorMessage(this.validationRule.message);
         }
     };
 
