@@ -1,6 +1,6 @@
 {
     "name": "formData",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "description": "Form validation based on data attributes",
     "keywords": [
         "form validation"
