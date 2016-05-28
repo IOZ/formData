@@ -6,7 +6,7 @@
     rules = {};
 
     pluginName = 'FormData';
-    version = '1.0.1';
+    version = '1.0.2';
     coreOptions = {
         validFormClass : 'formdata'
     };
