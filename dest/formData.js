@@ -1,6 +1,6 @@
 /**
  * formData - Form validation based on data attributes
- * @date - Thu Jul 30 2015 14:48:55 GMT+0200 (Central Europe Daylight Time)
+ * @date - Sun May 29 2016 01:27:15 GMT+0200 (CEST)
  * @version - 1.0.1
  */
 ;(function($, win, doc) {
@@ -19,8 +19,10 @@
         keyup: false,
         blur: true,
         validDataAttr : 'valid',
-        classSuccess : 'success',
-        classError : 'error',
+        classSuccess : 'fd-success',
+        classError : 'fd-error',
+        classFormError : 'fd-form-invalid',
+        placeForError: 'afterInput',
         tpl : {
             error : '<span class="form-error">{message}</span>'
         },
@@ -31,10 +33,11 @@
 
     function FormData(element, options) {
         this.$form = $(element);
+        this.$form.attr('novalidate', true);
         this.options = $.extend(true, {}, defaultOptions, options);
         this.$fields = this.$form.find('[data-' + this.options.validDataAttr + '], [required]');
         this.isFormValid = false;
-        this.formLog = {};
+        this.formLog = [];
         this.version = version;
         this.getFieldsRules();
         this.addFormEvents();
@@ -86,33 +89,36 @@
     FormData.prototype.addFormEvents = function() {
         var self = this;
         this.$form.on('submit', function(e) {
-            self.submitForm();
-            if (!self.isFormValid) {
+            if (self.options.preventSubmit) {
                 e.preventDefault();
-                if (typeof self.options.onError == "function") {
-                    self.options.onError(self.formLog);
-                }
-            } else {
-                if (typeof self.options.onSuccess == "function") {
-                    e.preventDefault();
-                    self.options.onSuccess(self.$form);
-                }
+            }
+            if (self.validate()) {
+                self.options.onSuccess(self.$form);
             }
         });
     };
 
-    FormData.prototype.submitForm = function() {
+    FormData.prototype.validate = function() {
         var self = this;
         this.$fields.each(function() {
             self.validateField(this);
         });
         this.isFormValid = !this.parseFormLog();
+        if (!this.isFormValid) {
+            this.$form.addClass(this.options.classFormError);
+            if (typeof self.options.onError == "function") {
+                this.options.onError(this.formLog);
+            }
+        } else {
+            this.$form.removeClass(this.options.classFormError);
+        }
+        return this.isFormValid;
     };
 
     FormData.prototype.parseFormLog = function() {
         var i, errorsCount;
         errorsCount = 0;
-        for (i in this.formLog) {
+        for (i = 0; i<this.formLog.length; i++) {
             if (this.formLog[i]) {
                 errorsCount += 1;
             }
@@ -132,6 +138,7 @@
             : 'required';
 
         this.validationRule = FormData.getRule(this.fieldRuleName);
+        this.errorInScope = this.isInErrorScope(this.fieldName);
         this.isFieldValid(this.validationRule.fn.call(this));         
     };
 
@@ -139,8 +146,21 @@
         return isValid ? this.hideFieldError() : this.showFieldError();
     };
 
+    FormData.prototype.isInErrorScope = function(fieldName) {
+        var i, isInScope;
+        isInScope = null;
+        for (i = 0; i < this.formLog.length; i++) {
+            this.formLog[i].fieldName == fieldName;
+            isInScope = {
+                index: i
+            };
+            break;
+        }
+        return isInScope;
+    };
+
     FormData.prototype.showFieldError = function() {
-        if (this.formLog[this.fieldName] || this.$field.prop('disabled')) { return; }
+        if (this.errorInScope || this.$field.prop('disabled')) { return; }
         this.$field.removeClass(this.options.classSuccess);
         this.$field.addClass(this.options.classError);
         this.$field.attr('aria-invalid', 'true');
@@ -160,7 +180,7 @@
     };
 
     FormData.prototype.showFieldErrorMessage = function(message) {
-        var tpl, i, optLength;
+        var tpl, i, optLength, errorPlace;
         if (typeof this.opt === "string") {
             message = message.replace(/{\w+}/i, this.opt);
         }
@@ -171,14 +191,38 @@
                 message = message.replace(/{\w+}/i, this.opt[i]);
             }
         }
-        this.formLog[this.fieldName] = message;
+        this.formLog.push({
+            'fieldName' : this.fieldName,
+            'message': message
+        });
+        message = this.options.placeForError == 'afterInput' ? message : this.formLog[0].message;
         tpl = this.options.tpl.error.replace(/{message}/i, message);
-        return this.$field.after(tpl);
+        if (this.options.placeForError == 'afterInput') {
+            this.$field.after(tpl)
+        } else {
+            errorPlace = this.$form.find(this.options.placeForError);
+            if (errorPlace.length) {
+                errorPlace.html(tpl);
+            }
+        }
+        return tpl;
     };
 
     FormData.prototype.hideFieldErrorMessage = function() {
-        this.formLog[this.fieldName] = null;
-        return this.$field.next().remove();
+        var errorPlace;
+        if (this.errorInScope) {
+            this.formLog.splice(this.errorInScope.index, 1);
+        }
+
+        if (this.options.placeForError == 'afterInput') {
+            this.$field.next().remove();
+        } else {
+            errorPlace = this.$form.find(this.options.placeForError);
+            if (errorPlace.length) {
+                errorPlace.html('');
+            }
+        }
+        return this;
     };
 
     FormData.prototype.parseErrors = function(errors) {
