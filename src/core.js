@@ -264,7 +264,7 @@
         return rules[name];
     };
 
-    window.FormData = FormData;
+    $.FormData = FormData;
 
     $.fn[pluginName] = function(options) {
         return this.each(function() {
